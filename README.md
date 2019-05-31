@@ -1,2 +1,2 @@
 # SeroCall
-Pneumococcal serotype quantification using NGS reads
+Pneumococcal serotype quantification using NGS reads. Coming soon...
