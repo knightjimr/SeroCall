@@ -65,8 +65,8 @@ The following is an example sero_calls.txt file:
 The first line of the output is a file format tag.  The other lines, before the "#SEROTYPE..." header, contain metrics about
 the read data, including the following:
 * NumReads - the number of input reads
-* NumUnmapped - number of reads not mapped to serotype or S. pneumoniae genomes
-* NumGenome - number of reads mapped to the S. pneumoniae genomes (not the serotype sequences)
+* NumUnmapped - number of reads not mapped to serotype or *S. pneumoniae* genomes
+* NumGenome - number of reads mapped to the *S. pneumoniae* genomes (not the serotype sequences)
 * NumOther - number of other alignments, including partial, high error and chimeric alignments
 * NumCapsule - number of reads well-aligned to the serotype capsular sequences (i.e., used to call serotypes)
 
@@ -152,8 +152,8 @@ top-level "data" directory.
 * A backup of the existing top-level "data" directory files is made, placed in "data/bak".  (But, only a single backup
 is made, so if builddata.sh is run multiple times, the previous backup is removed.)
 * This command will download a pair of FASTQ files, totalling 1.5 GB, and store them in the "genomeOnly" sub-directory
-the first time it is run.  This file contains a real run of a capsule-free sample, and is used to identify those
-serotype regions where genomic reads may align.
+the first time it is run.  These files contain a real run of a capsule-free sample, and is used to identify those
+serotype regions where genomic reads may align into the serotypes.
 
 ## Citation
 
