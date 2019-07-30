@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+
+import sys
+import argparse
+import inspect
+import os
+import subprocess
+
+# Identify the directory the code has been installed into.
+
+ROOTDIR = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))
+
+# Parse the command-line arguments.
+
+parser = argparse.ArgumentParser(prog="serocall")
+parser.add_argument("-o", "--output", type=str, default="sero", help="Prefix for output files [default 'sero']")
+parser.add_argument("-t", "--thread", type=int, default=1, help="Number of processors to use [default 1]")
+parser.add_argument("-c", "--counts", type=str, default="", help=argparse.SUPPRESS)
+parser.add_argument("-d", "--debug", type=str, default="", help=argparse.SUPPRESS)
+parser.add_argument("r1file", type=str, help="R1 FASTQ file (can be gzipped)")
+parser.add_argument("r2file", type=str, help="R2 FASTQ file (can be gzipped)")
+
+args = parser.parse_args()
+
+# Run BWA MEM to generate the counts.txt file.
+
+if args.counts:
+    countsFile = args.counts
+else:
+    (out,err) = subprocess.Popen("bwa", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=-1).communicate()
+    if not err.find("Contact: Heng Li"):
+        sys.stderr.write(err)
+        sys.exit(-1)
+
+    sys.stderr.write("Performing alignments...\n")
+
+    cmd = "bwa mem -v 1 -t %s -M " % args.thread + \
+          "%s/data/serotypes_plus_multi_genome.fasta " % ROOTDIR + \
+          "%s %s | " % (args.r1file, args.r2file) + \
+          "python %s/bincounts.py -n %s " % (ROOTDIR, os.path.basename(args.output.rstrip("/"))) + \
+          "%s/data/serobins_500.txt - > %s_counts.txt" % (ROOTDIR, args.output)
+
+    errcnt = 0
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=-1)
+    p.poll()
+    while p.returncode is None:
+        line = p.stdout.readline()
+        p.poll()
+        if line.startswith("[M::") or line.startswith("[main]") or len(line) == 0: continue
+        sys.stderr.write(line)
+        if not line.startswith("  ->"):
+            #sys.stderr.write("Error line:  '%s'\n" % line)
+            errcnt += 1
+
+    if errcnt > 0:
+        sys.exit(-1)
+
+    countsFile = "%s_counts.txt" % args.output
+
+# Perform the quantification of the counts and generate the output.
+
+sys.stderr.write("Calling serotypes...\n")
+
+cmd = "python %s/serocall.py -t 0.2 %s -o %s %s/data/baseline_bin500.txt %s" % \
+          (ROOTDIR, "-d " + args.debug if args.debug else "", args.output, ROOTDIR, countsFile)
+subprocess.call(cmd, shell=True)
+
