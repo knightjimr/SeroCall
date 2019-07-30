@@ -42,7 +42,7 @@ optional arguments:
 In its simplest form, the serocall command just takes the the R1 and R2 fastq files from a paired-end sequencing run.
 The files can be gzipped or uncompressed, and there are no limitations or patterns to the given filenames.
 
-An "-t #" option can be used to have BWA MEM use multiple threads for processing (BWA MEM is very efficient with
+A "-t #" option can be used to have BWA MEM use multiple threads for processing (BWA MEM is very efficient with
 parallelizing the alignments, so using multiple threads will reduce the running time of the tool).
 
 SeroCall will generate two output files, a *_counts.txt containing the intermediate "bin" counts, counting how many reads
@@ -70,7 +70,7 @@ the read data, including the following:
 * NumOther - number of other alignments, including partial, high error and chimeric alignments
 * NumCapsule - number of reads well-aligned to the serotype capsular sequences (i.e., used to call serotypes)
 
-The "#SEROTYPE..." header and following lines are tab-delimited lines report the serotypes called and their percentages.
+The "#SEROTYPE..." header and following lines are tab-delimited lines reporting the serotypes called and their percentages.
 If no lines appear after the header, no serotypes were called from the data.
 
 The sero_counts.txt file is technically an intermediate file, but can be useful for post-analysis QC of the calls.  The
@@ -114,7 +114,7 @@ distinguishing closely related serogroups.
 
 ## Building/Updating the Reference Database
 
-*WARNING:  This functionality has not been tested externally, does require some (to a lot) of care when making changes, and
+*WARNING:  This functionality has not been tested externally, does require some (to a lot of) care when making changes, and
 should be needed by only a small subset of users.*
 
 The current software has pre-built databases containing the same serotype sequences as the PneumoCaT v1.2 database, and
@@ -151,6 +151,9 @@ running this command:
 top-level "data" directory.
 * A backup of the existing top-level "data" directory files is made, placed in "data/bak".  (But, only a single backup
 is made, so if builddata.sh is run multiple times, the previous backup is removed.)
+* This command will download a pair of FASTQ files, totalling 1.5 GB, and store them in the "genomeOnly" sub-directory
+the first time it is run.  This file contains a real run of a capsule-free sample, and is used to identify those
+serotype regions where genomic reads may align.
 
 ## Citation
 
