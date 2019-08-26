@@ -27,7 +27,9 @@ args = parser.parse_args()
 if args.counts:
     countsFile = args.counts
 else:
-    (out,err) = subprocess.Popen("bwa", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=-1).communicate()
+    (out,err) = subprocess.Popen("bwa", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=-1, universal_newlines=True).communicate()
+    out = str(out)
+    err = str(err)
     if not err.find("Contact: Heng Li"):
         sys.stderr.write(err)
         sys.exit(-1)
@@ -41,10 +43,10 @@ else:
           "%s/data/serobins_500.txt - > %s_counts.txt" % (ROOTDIR, args.output)
 
     errcnt = 0
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=-1)
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=-1, universal_newlines=True)
     p.poll()
     while p.returncode is None:
-        line = p.stdout.readline()
+        line = str(p.stdout.readline())
         p.poll()
         if line.startswith("[M::") or line.startswith("[main]") or len(line) == 0: continue
         sys.stderr.write(line)
