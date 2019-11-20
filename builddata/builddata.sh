@@ -3,7 +3,7 @@ set -e
 
 if ! [ -e genomeOnly/T4J_genomeOnly_R1_001.fastq.gz ] ; then
     cd genomeOnly
-    wget 'http://sysg1.cs.yale.edu:3010/tW6omLeDs96s3t2R7ghvL31bw2yib/share/T4J_genomeOnly_*.fastq.gz'
+    wget 'http://fcb.ycga.yale.edu:3010/UtFuVmt9wsefQmxuXcgYx9rKolaFb/share/T4J_genomeOnly_*.fastq.gz'
     cd ..
 fi 
 
