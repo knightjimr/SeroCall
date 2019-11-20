@@ -2,6 +2,7 @@
 set -e
 
 if ! [ -e genomeOnly/T4J_genomeOnly_R1_001.fastq.gz ] ; then
+    mkdir -p genomeOnly
     cd genomeOnly
     wget 'http://fcb.ycga.yale.edu:3010/UtFuVmt9wsefQmxuXcgYx9rKolaFb/share/T4J_genomeOnly_R1_001.fastq.gz'
     wget 'http://fcb.ycga.yale.edu:3010/UtFuVmt9wsefQmxuXcgYx9rKolaFb/share/T4J_genomeOnly_R2_001.fastq.gz'
